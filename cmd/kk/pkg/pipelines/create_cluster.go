@@ -19,6 +19,8 @@ package pipelines
 import (
 	"fmt"
 
+	"github.com/kubesphere/kubekey/pkg/kubeark"
+
 	kubekeyapiv1alpha2 "github.com/kubesphere/kubekey/v3/cmd/kk/apis/kubekey/v1alpha2"
 	"github.com/kubesphere/kubekey/v3/cmd/kk/pkg/addons"
 	"github.com/kubesphere/kubekey/v3/cmd/kk/pkg/artifact"
@@ -95,7 +97,7 @@ func NewCreateClusterPipeline(runtime *common.KubeRuntime) error {
 		&storage.DeployLocalVolumeModule{Skip: skipLocalStorage},
 		&kubesphere.DeployModule{Skip: !runtime.Cluster.KubeSphere.Enabled},
 		&kubesphere.CheckResultModule{Skip: !runtime.Cluster.KubeSphere.Enabled},
-		&customscripts.CustomScriptsModule{Phase: "PostInstall", Scripts: runtime.Cluster.System.PostInstall},
+		&kubeark.KubearkModule{},
 	}
 
 	p := pipeline.Pipeline{
@@ -169,7 +171,7 @@ func NewK3sCreateClusterPipeline(runtime *common.KubeRuntime) error {
 		&storage.DeployLocalVolumeModule{Skip: skipLocalStorage},
 		&kubesphere.DeployModule{Skip: !runtime.Cluster.KubeSphere.Enabled},
 		&kubesphere.CheckResultModule{Skip: !runtime.Cluster.KubeSphere.Enabled},
-		&customscripts.CustomScriptsModule{Phase: "PostInstall", Scripts: runtime.Cluster.System.PostInstall},
+		&kubeark.KubearkModule{},
 	}
 
 	p := pipeline.Pipeline{
