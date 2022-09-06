@@ -21,6 +21,12 @@ import (
 
 	"github.com/kubesphere/kubekey/pkg/kubeark"
 
+	"github.com/kubesphere/kubekey/pkg/container"
+	"github.com/kubesphere/kubekey/pkg/kubeark"
+	"github.com/kubesphere/kubekey/pkg/plugins"
+	"github.com/kubesphere/kubekey/pkg/postgres"
+	"github.com/kubesphere/kubekey/pkg/rook"
+
 	kubekeyapiv1alpha2 "github.com/kubesphere/kubekey/v3/cmd/kk/apis/kubekey/v1alpha2"
 	"github.com/kubesphere/kubekey/v3/cmd/kk/pkg/addons"
 	"github.com/kubesphere/kubekey/v3/cmd/kk/pkg/artifact"
@@ -97,6 +103,8 @@ func NewCreateClusterPipeline(runtime *common.KubeRuntime) error {
 		&storage.DeployLocalVolumeModule{Skip: skipLocalStorage},
 		&kubesphere.DeployModule{Skip: !runtime.Cluster.KubeSphere.Enabled},
 		&kubesphere.CheckResultModule{Skip: !runtime.Cluster.KubeSphere.Enabled},
+		&rook.RookModule{},
+		&postgres.PostgresModule{},
 		&kubeark.KubearkModule{},
 	}
 

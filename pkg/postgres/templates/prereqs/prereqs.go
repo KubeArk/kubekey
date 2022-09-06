@@ -6647,6 +6647,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pgo
+  namespace: postgres-operator
 spec:
   replicas: 1
   strategy: { type: Recreate }
@@ -6660,7 +6661,7 @@ spec:
     spec:
       containers:
       - name: operator
-        image: postgres-operator
+        image: registry.developers.crunchydata.com/crunchydata/postgres-operator:ubi8-5.0.4-0
         env:
         - name: CRUNCHY_DEBUG
           value: "true"
@@ -6694,7 +6695,7 @@ roleRef:
   name: postgres-operator
 subjects:
 - kind: ServiceAccount
-  name: pgov
+  name: pgo
   namespace: postgres-operator
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -6823,4 +6824,5 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: pgo
+  namespace: postgres-operator
 `)))
