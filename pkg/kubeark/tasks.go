@@ -19,7 +19,9 @@ func (g *GenerateKubearkConfigManifest) Execute(runtime connector.Runtime) error
 	templateAction := action.Template{
 		Template: templates.KubearkConfigs,
 		Dst:      filepath.Join(common.KubeManifestDir, templates.KubearkConfigs.Name()),
-		Data:     util.Data{},
+		Data: util.Data{
+			"IngressHost": g.KubeConf.Cluster.Kubeark.IngressHost,
+		},
 	}
 
 	templateAction.Init(nil, nil)
