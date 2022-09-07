@@ -114,6 +114,7 @@ func (cfg *ClusterSpec) SetDefaultClusterSpec() (*ClusterSpec, map[string][]*Kub
 	clusterCfg.Storage = SetDefaultStorageCfg(cfg)
 	clusterCfg.System = cfg.System
 	clusterCfg.Kubernetes = SetDefaultClusterCfg(cfg)
+	clusterCfg.Kubeark = SetDefaultKubearkCfg(cfg)
 	clusterCfg.Registry = cfg.Registry
 	clusterCfg.Addons = cfg.Addons
 	clusterCfg.KubeSphere = cfg.KubeSphere
@@ -137,6 +138,16 @@ func (cfg *ClusterSpec) SetDefaultClusterSpec() (*ClusterSpec, map[string][]*Kub
 		clusterCfg.Kubernetes.ProxyMode = DefaultProxyMode
 	}
 	return &clusterCfg, roleGroups
+}
+
+func SetDefaultKubearkCfg(cfg *ClusterSpec) Kubeark {
+	if cfg.Kubeark.IngressHost == "" {
+		cfg.Kubeark.IngressHost = "kubeark.io"
+	}
+
+	defaultKaCfg := cfg.Kubeark
+
+	return defaultKaCfg
 }
 
 func SetDefaultHostsCfg(cfg *ClusterSpec) []HostCfg {
