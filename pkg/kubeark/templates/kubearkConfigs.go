@@ -139,10 +139,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - installer.kubeark.com
+        - {{ .IngressHost }}
       secretName: modex-main-tls
   rules:
-    - host: installer.kubeark.com
+    - host: {{ .IngressHost }}
       http:
         paths:
         - path: /
