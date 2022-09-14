@@ -112,7 +112,7 @@ spec:
          - "bin/bash"
          - "-c"
          #TODO change demo namespace below - make it dynamic with helm charts
-         - "kubectl get secret postgresscluster-pguser-kube-db -n postgres-operator -o json | jq 'del(.metadata[\"namespace\",\"creationTimestamp\",\"resourceVersion\",\"selfLink\",\"uid\",\"ownerReferences\"])' | kubectl apply -f -"
+         - "kubectl get secret postgresscluster-pguser-kube-db -n postgres-operator -o json | jq 'del(.metadata[\"namespace\",\"creationTimestamp\",\"resourceVersion\",\"selfLink\",\"uid\",\"ownerReferences\"])' | kubectl apply -n kubeark -f -"
       restartPolicy: Never
 ---
 apiVersion: networking.k8s.io/v1
