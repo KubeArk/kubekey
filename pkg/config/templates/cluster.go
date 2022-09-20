@@ -69,6 +69,9 @@ spec:
     namespaceOverride: ""
     registryMirrors: []
     insecureRegistries: []
+  kubeark:
+    ingressHost: ""
+    acmeEmail: ""
   addons: []
 
 {{ if .Options.KubeSphereEnabled }}

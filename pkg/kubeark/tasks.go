@@ -20,7 +20,8 @@ func (g *GenerateKubearkConfigManifest) Execute(runtime connector.Runtime) error
 		Template: templates.KubearkConfigs,
 		Dst:      filepath.Join(common.KubeManifestDir, templates.KubearkConfigs.Name()),
 		Data: util.Data{
-			"IngressHost": g.KubeConf.Cluster.Kubeark.IngressHost,
+			"AcmeEmail": g.KubeConf.Cluster.Kubeark.AcmeEmail,
+			"Storage":   g.KubeConf.Cluster.Kubeark.Storage,
 		},
 	}
 
@@ -50,7 +51,9 @@ func (g *GenerateKubearkAppManifest) Execute(runtime connector.Runtime) error {
 	templateAction := action.Template{
 		Template: templates.KubearkAppManifest,
 		Dst:      filepath.Join(common.KubeManifestDir, templates.KubearkAppManifest.Name()),
-		Data:     util.Data{},
+		Data: util.Data{
+			"IngressHost": g.KubeConf.Cluster.Kubeark.IngressHost,
+		},
 	}
 
 	templateAction.Init(nil, nil)

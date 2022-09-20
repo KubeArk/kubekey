@@ -108,7 +108,10 @@ func (g *GenerateRookClusterManifest) Execute(runtime connector.Runtime) error {
 	templateAction := action.Template{
 		Template: cluster.RookCluster,
 		Dst:      filepath.Join(common.KubeManifestDir, cluster.RookCluster.Name()),
-		Data:     util.Data{},
+		Data: util.Data{
+			"MonCount": g.KubeConf.Cluster.Kubeark.Rook.MonCount,
+			"MgrCount": g.KubeConf.Cluster.Kubeark.Rook.MgrCount,
+		},
 	}
 
 	templateAction.Init(nil, nil)
@@ -137,7 +140,10 @@ func (g *GenerateRookFilesysteManifest) Execute(runtime connector.Runtime) error
 	templateAction := action.Template{
 		Template: filesystem.RookFilesystem,
 		Dst:      filepath.Join(common.KubeManifestDir, filesystem.RookFilesystem.Name()),
-		Data:     util.Data{},
+		Data: util.Data{
+			"MetadataPoolSize": g.KubeConf.Cluster.Kubeark.Rook.MetadataPoolSize,
+			"DataPoolSize":     g.KubeConf.Cluster.Kubeark.Rook.DataPoolSize,
+		},
 	}
 
 	templateAction.Init(nil, nil)

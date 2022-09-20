@@ -49,7 +49,10 @@ func (g *GeneratePostgresClusterManifest) Execute(runtime connector.Runtime) err
 	templateAction := action.Template{
 		Template: cluster.PostgresCluster,
 		Dst:      filepath.Join(common.KubeManifestDir, cluster.PostgresCluster.Name()),
-		Data:     util.Data{},
+		Data: util.Data{
+			"InstanceStorage": g.KubeConf.Cluster.Kubeark.Postgres.InstanceStorage,
+			"BackupStorage":   g.KubeConf.Cluster.Kubeark.Postgres.BackupStorage,
+		},
 	}
 
 	templateAction.Init(nil, nil)

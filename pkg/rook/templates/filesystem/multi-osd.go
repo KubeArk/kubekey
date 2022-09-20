@@ -33,7 +33,7 @@ metadata:
 spec:
   metadataPool:
     replicated:
-      size: 3
+      size: {{ .MetadataPoolSize }}
       requireSafeReplicaSize: true
     parameters:
       compression_mode: none
@@ -41,7 +41,7 @@ spec:
     - name: replicated
       failureDomain: host
       replicated:
-        size: 3
+        size: {{ .DataPoolSize }}
         requireSafeReplicaSize: true
       parameters:
         compression_mode: none
@@ -93,7 +93,7 @@ parameters:
 
   # Ceph pool into which the volume shall be created
   # Required for provisionVolume: "true"
-  pool: myfs-data0
+  pool: myfs-replicated
 
   # The secrets contain Ceph admin credentials. These are generated automatically by the operator
   # in the same namespace as the cluster.

@@ -106,6 +106,8 @@ func (i *InstallationConfirm) Execute(runtime connector.Runtime) error {
 	fmt.Println("Before installation, ensure that your machines meet all requirements specified at")
 	fmt.Println("https://github.com/kubesphere/kubekey#requirements-and-recommendations")
 	fmt.Println("")
+	fmt.Println("If you continue with the installation, you ACCEPT the TERMS and CONDITIONS below:")
+	fmt.Println("https://25744183.fs1.hubspotusercontent-eu1.net/hubfs/25744183/20220901KubearkFLA.pdf")
 
 	if k8sVersion, err := versionutil.ParseGeneric(i.KubeConf.Cluster.Kubernetes.Version); err == nil {
 		if k8sVersion.AtLeast(versionutil.MustParseSemantic("v1.24.0")) && i.KubeConf.Cluster.Kubernetes.ContainerManager == common.Docker {

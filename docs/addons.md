@@ -84,4 +84,23 @@ spec:
         - ceph.userId=***
         - ceph.userKey=***
         - sc.isDefault=true
+  
+  - name: cert-manager
+    namespace: cert-manager
+    sources:
+      chart:
+        name: jetstack/cert-manager
+        repo: https://charts.jetstack.io
+        values:
+        - installCRDs=true
+  
+  - name: ingress-nginx
+    namespace: nginx
+    sources:
+      chart:
+        name: ingress-nginx/ingress-nginx
+        repo: https://kubernetes.github.io/ingress-nginx
+        values:
+        - rbac.create=true
+        - controller.replicaCount=1
 ```

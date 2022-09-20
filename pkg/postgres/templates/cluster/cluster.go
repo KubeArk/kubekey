@@ -46,7 +46,7 @@ spec:
         - "ReadWriteOnce"
         resources:
           requests:
-            storage: 15Gi
+            storage: {{ .InstanceStorage }}
         storageClassName: rook-cephfs
   users:
     - name: kube-db
@@ -64,7 +64,7 @@ spec:
             - "ReadWriteOnce"
             resources:
               requests:
-                storage: 5Gi
+                storage: {{ .BackupStorage }}
             storageClassName: rook-cephfs
 
 `)))

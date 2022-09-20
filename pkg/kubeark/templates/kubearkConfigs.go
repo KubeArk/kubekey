@@ -115,43 +115,21 @@ spec:
          - "kubectl get secret postgresscluster-pguser-kube-db -n postgres-operator -o json | jq 'del(.metadata[\"namespace\",\"creationTimestamp\",\"resourceVersion\",\"selfLink\",\"uid\",\"ownerReferences\"])' | kubectl apply -n kubeark -f -"
       restartPolicy: Never
 ---
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
 metadata:
-  name: kubeark-webapp-ingress
-  namespace: kubeark
-  annotations:
-    kubernetes.io/ingress.allow-http: "true"
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/http2-push-preload: "true"
-    nginx.ingress.kubernetes.io/service-upstream: "true"
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: 60s
-    nginx.ingress.kubernetes.io/proxy-send-timeout: 60s
-    nginx.ingress.kubernetes.io/proxy-read-timeout:  60s
-    nginx.ingress.kubernetes.io/connection-proxy-header: "keep-alive"
-    nginx.ingress.kubernetes.io/configuration-snippet: "
-	  nginx.ingress.kubernetes.io/rewrite-target: /$1
-      keepalive_timeout 60s;
-      send_timeout 60s;"
+  name: letsencrypt
 spec:
-  tls:
-    - hosts:
-        - {{ .IngressHost }}
-      secretName: modex-main-tls
-  rules:
-    - host: {{ .IngressHost }}
-      http:
-        paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: kubeark-web-app-service
-              port:
-                number: 80
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: {{ .AcmeEmail }}
+    preferredChain: "ISRG Root X1"
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -164,7 +142,7 @@ spec:
   - ReadWriteMany
   resources:
     requests:
-      storage: 20Gi
+      storage: {{ .Storage }}
 ---
 kind: Secret
 apiVersion: v1

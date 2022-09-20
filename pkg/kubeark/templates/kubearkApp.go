@@ -89,13 +89,11 @@ spec:
   selector:
     app: kubeark-web-frontend
     namespace: kubeark
-  type: LoadBalancer
+  type: ClusterIP
   sessionAffinity: None
-  externalTrafficPolicy: Cluster
   ipFamilies:
     - IPv4
   ipFamilyPolicy: SingleStack
-  internalTrafficPolicy: Cluster
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -227,7 +225,7 @@ spec:
     - name: http
       port: 80
       targetPort: 8000
-  type: LoadBalancer
+  type: ClusterIP
 ---
 kind: Deployment
 apiVersion: apps/v1
@@ -338,4 +336,42 @@ spec:
   ipFamilies:
     - IPv4
   ipFamilyPolicy: SingleStack
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubeark-webapp-ingress
+  namespace: kubeark
+  annotations:
+    kubernetes.io/ingress.allow-http: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/http2-push-preload: "true"
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: 60s
+    nginx.ingress.kubernetes.io/proxy-send-timeout: 60s
+    nginx.ingress.kubernetes.io/proxy-read-timeout:  60s
+    nginx.ingress.kubernetes.io/connection-proxy-header: "keep-alive"
+    nginx.ingress.kubernetes.io/configuration-snippet: "
+      keepalive_timeout 60s;
+      send_timeout 60s;"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+spec:
+  tls:
+    - hosts:
+        - {{ .IngressHost }}
+      secretName: modex-main-tls
+  rules:
+    - host: {{ .IngressHost }}
+      http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: kubeark-web-app-service
+              port:
+                number: 80
 `)))

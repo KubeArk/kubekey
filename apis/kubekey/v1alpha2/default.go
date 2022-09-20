@@ -89,6 +89,14 @@ const (
 	DefaultDNSAddress           = "114.114.114.114"
 	DefaultDpdkTunnelIface      = "br-phy"
 	DefaultCNIConfigPriority    = "01"
+	DefaultCertMgrName          = "cert-manager"
+	DefaultCertMgrNamespace     = "cert-manager"
+	DefaultCertMgrChartName     = "cert-manager"
+	DefaultCertMgrRepoUrl       = "https://charts.jetstack.io"
+	DefaultIngressCtrlName      = "ingress-nginx"
+	DefaultIngressCtrNamespace  = "nginx"
+	DefaultIngressCtrChartName  = "ingress-nginx"
+	DefaultCIngressCtrRepoUrl   = "https://kubernetes.github.io/ingress-nginx"
 
 	Docker     = "docker"
 	Conatinerd = "containerd"
@@ -112,7 +120,7 @@ func (cfg *ClusterSpec) SetDefaultClusterSpec(incluster bool) (*ClusterSpec, map
 	clusterCfg.Kubernetes = SetDefaultClusterCfg(cfg)
 	clusterCfg.Kubeark = SetDefaultKubearkCfg(cfg)
 	clusterCfg.Registry = cfg.Registry
-	clusterCfg.Addons = cfg.Addons
+	clusterCfg.Addons = SetDefaultAddons(cfg)
 	clusterCfg.KubeSphere = cfg.KubeSphere
 
 	if cfg.Kubernetes.ClusterName == "" {
@@ -137,10 +145,67 @@ func SetDefaultKubearkCfg(cfg *ClusterSpec) Kubeark {
 	if cfg.Kubeark.IngressHost == "" {
 		cfg.Kubeark.IngressHost = "kubeark.io"
 	}
+	if cfg.Kubeark.AcmeEmail == "" {
+		cfg.Kubeark.AcmeEmail = "test@test.com"
+	}
+	if cfg.Kubeark.Storage == "" {
+		cfg.Kubeark.Storage = "20Gi"
+	}
+	if cfg.Kubeark.Rook.MonCount == 0 {
+		cfg.Kubeark.Rook.MonCount = 3
+	}
+	if cfg.Kubeark.Rook.MgrCount == 0 {
+		cfg.Kubeark.Rook.MgrCount = 2
+	}
+	if cfg.Kubeark.Rook.MetadataPoolSize == 0 {
+		cfg.Kubeark.Rook.MetadataPoolSize = 2
+	}
+	if cfg.Kubeark.Rook.DataPoolSize == 0 {
+		cfg.Kubeark.Rook.DataPoolSize = 2
+	}
+	if cfg.Kubeark.Postgres.InstanceStorage == "" {
+		cfg.Kubeark.Postgres.InstanceStorage = "15Gi"
+	}
+	if cfg.Kubeark.Postgres.BackupStorage == "" {
+		cfg.Kubeark.Postgres.BackupStorage = "15Gi"
+	}
+	return cfg.Kubeark
+}
 
-	defaultKaCfg := cfg.Kubeark
+func SetDefaultAddons(cfg *ClusterSpec) []Addon {
+	var addonsCfg []Addon
+	addonsCfg = append(addonsCfg, AddCertManagerAddon(cfg))
+	addonsCfg = append(addonsCfg, AddIngressControllerAddon(cfg))
+	return addonsCfg
+}
 
-	return defaultKaCfg
+func AddCertManagerAddon(cfg *ClusterSpec) Addon {
+	var certMgr Addon
+	certMgr.Name = DefaultCertMgrName
+	certMgr.Namespace = DefaultCertMgrNamespace
+	certMgr.Sources.Chart.Name = DefaultCertMgrChartName
+	certMgr.Sources.Chart.Repo = DefaultCertMgrRepoUrl
+	certMgr.Sources.Chart.Values = GetCertManagerValues()
+	return certMgr
+}
+
+func GetCertManagerValues() []string {
+	return []string{"installCRDs=true"}
+}
+
+func AddIngressControllerAddon(cfg *ClusterSpec) Addon {
+	var ingressCtrl Addon
+	ingressCtrl.Name = DefaultIngressCtrlName
+	ingressCtrl.Namespace = DefaultIngressCtrNamespace
+	ingressCtrl.Sources.Chart.Name = DefaultIngressCtrChartName
+	ingressCtrl.Sources.Chart.Repo = DefaultCIngressCtrRepoUrl
+	ingressCtrl.Sources.Chart.Values = GetIngressCtrlValues(cfg)
+	return ingressCtrl
+}
+
+func GetIngressCtrlValues(cfg *ClusterSpec) []string {
+	return []string{"rbac.create=true", "controller.service.loadBalancerIP=10.2.0.100", "controller.replicaCount=1"}
+	// return []string{"rbac.create=true", fmt.Sprintf("controller.service.loadBalancerIP=%s", cfg.Hosts[0].Address), "controller.replicaCount=1"}
 }
 
 func SetDefaultHostsCfg(cfg *ClusterSpec) []HostCfg {

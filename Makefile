@@ -55,8 +55,8 @@ endif
 SHELL = /usr/bin/env bash -o pipefail
 .SHELLFLAGS = -ec
 
-GOOS ?= $(shell go env GOOS)
-GOARCH ?= $(shell go env GOARCH)
+GOOS ?= linux
+GOARCH ?= amd64
 
 BUILDFLAGS = -tags='containers_image_openpgp'
 
