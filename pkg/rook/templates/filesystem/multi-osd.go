@@ -34,7 +34,7 @@ spec:
   metadataPool:
     replicated:
       size: {{ .MetadataPoolSize }}
-      requireSafeReplicaSize: true
+      requireSafeReplicaSize: {{ .IsRequireSafeReplicaSizeMetaDataPool }}
     parameters:
       compression_mode: none
   dataPools:
@@ -42,7 +42,7 @@ spec:
       failureDomain: host
       replicated:
         size: {{ .DataPoolSize }}
-        requireSafeReplicaSize: true
+        requireSafeReplicaSize: {{ .IsRequireSafeReplicaSizeDataPools }}
       parameters:
         compression_mode: none
   preserveFilesystemOnDelete: true

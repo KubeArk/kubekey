@@ -141,8 +141,10 @@ func (g *GenerateRookFilesysteManifest) Execute(runtime connector.Runtime) error
 		Template: filesystem.RookFilesystem,
 		Dst:      filepath.Join(common.KubeManifestDir, filesystem.RookFilesystem.Name()),
 		Data: util.Data{
-			"MetadataPoolSize": g.KubeConf.Cluster.Kubeark.Rook.MetadataPoolSize,
-			"DataPoolSize":     g.KubeConf.Cluster.Kubeark.Rook.DataPoolSize,
+			"MetadataPoolSize":                     g.KubeConf.Cluster.Kubeark.Rook.MetadataPoolSize,
+			"DataPoolSize":                         g.KubeConf.Cluster.Kubeark.Rook.DataPoolSize,
+			"IsRequireSafeReplicaSizeMetaDataPool": g.KubeConf.Cluster.Kubeark.Rook.IsRequireSafeReplicaSizeMetaDataPool,
+			"IsRequireSafeReplicaSizeDataPools":    g.KubeConf.Cluster.Kubeark.Rook.IsRequireSafeReplicaSizeDataPools,
 		},
 	}
 

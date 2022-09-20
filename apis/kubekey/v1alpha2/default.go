@@ -94,7 +94,7 @@ const (
 	DefaultCertMgrChartName     = "cert-manager"
 	DefaultCertMgrRepoUrl       = "https://charts.jetstack.io"
 	DefaultIngressCtrlName      = "ingress-nginx"
-	DefaultIngressCtrNamespace  = "nginx"
+	DefaultIngressCtrNamespace  = "ingress-nginx"
 	DefaultIngressCtrChartName  = "ingress-nginx"
 	DefaultCIngressCtrRepoUrl   = "https://kubernetes.github.io/ingress-nginx"
 
@@ -151,17 +151,28 @@ func SetDefaultKubearkCfg(cfg *ClusterSpec) Kubeark {
 	if cfg.Kubeark.Storage == "" {
 		cfg.Kubeark.Storage = "20Gi"
 	}
-	if cfg.Kubeark.Rook.MonCount == 0 {
-		cfg.Kubeark.Rook.MonCount = 3
-	}
-	if cfg.Kubeark.Rook.MgrCount == 0 {
-		cfg.Kubeark.Rook.MgrCount = 2
-	}
-	if cfg.Kubeark.Rook.MetadataPoolSize == 0 {
-		cfg.Kubeark.Rook.MetadataPoolSize = 2
-	}
-	if cfg.Kubeark.Rook.DataPoolSize == 0 {
-		cfg.Kubeark.Rook.DataPoolSize = 2
+	if isMultiNode(cfg) {
+		if cfg.Kubeark.Rook.MonCount == 0 {
+			cfg.Kubeark.Rook.MonCount = 3
+		}
+		if cfg.Kubeark.Rook.MgrCount == 0 {
+			cfg.Kubeark.Rook.MgrCount = 2
+		}
+		if cfg.Kubeark.Rook.MetadataPoolSize == 0 {
+			cfg.Kubeark.Rook.MetadataPoolSize = 2
+		}
+		if cfg.Kubeark.Rook.DataPoolSize == 0 {
+			cfg.Kubeark.Rook.DataPoolSize = 2
+		}
+		cfg.Kubeark.Rook.IsRequireSafeReplicaSizeMetaDataPool = true
+		cfg.Kubeark.Rook.IsRequireSafeReplicaSizeDataPools = true
+	} else {
+		cfg.Kubeark.Rook.MonCount = 1
+		cfg.Kubeark.Rook.MgrCount = 1
+		cfg.Kubeark.Rook.MetadataPoolSize = 1
+		cfg.Kubeark.Rook.IsRequireSafeReplicaSizeMetaDataPool = false
+		cfg.Kubeark.Rook.DataPoolSize = 1
+		cfg.Kubeark.Rook.IsRequireSafeReplicaSizeDataPools = false
 	}
 	if cfg.Kubeark.Postgres.InstanceStorage == "" {
 		cfg.Kubeark.Postgres.InstanceStorage = "15Gi"
@@ -170,6 +181,14 @@ func SetDefaultKubearkCfg(cfg *ClusterSpec) Kubeark {
 		cfg.Kubeark.Postgres.BackupStorage = "15Gi"
 	}
 	return cfg.Kubeark
+}
+
+func isMultiNode(cfg *ClusterSpec) bool {
+	if len(cfg.Hosts) >= 3 {
+		return true
+	} else {
+		return false
+	}
 }
 
 func SetDefaultAddons(cfg *ClusterSpec) []Addon {

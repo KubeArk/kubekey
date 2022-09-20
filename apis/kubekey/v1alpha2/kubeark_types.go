@@ -5,15 +5,17 @@ type Kubeark struct {
 	IngressHost string   `yaml:"ingressHost" json:"ingressHost,omitempty"`
 	AcmeEmail   string   `yaml:"acmeEmail" json:"acmeEmail,omitempty"`
 	Storage     string   `yaml:"storage" json:"storage,omitempty"`
-	Rook        Rook     `yaml:"rook" json:"sources"`
+	Rook        Rook     `yaml:"rook" json:"rook"`
 	Postgres    Postgres `yaml:"postgres" json:"postgres"`
 }
 
 type Rook struct {
-	MonCount         int `yaml:"monCount" json:"monCount,omitempty"`
-	MgrCount         int `yaml:"mgrCount" json:"mgrCount,omitempty"`
-	MetadataPoolSize int `yaml:"metadataPoolSize" json:"metadataPoolSize,omitempty"`
-	DataPoolSize     int `yaml:"dataPoolSize" json:"dataPoolSize,omitempty"`
+	MonCount                             int  `yaml:"monCount" json:"monCount,omitempty"`
+	MgrCount                             int  `yaml:"mgrCount" json:"mgrCount,omitempty"`
+	MetadataPoolSize                     int  `yaml:"metadataPoolSize" json:"metadataPoolSize,omitempty"`
+	DataPoolSize                         int  `yaml:"dataPoolSize" json:"dataPoolSize,omitempty"`
+	IsRequireSafeReplicaSizeMetaDataPool bool `yaml:"isRequireSafeReplicaSizeMetaDataPool" json:"isRequireSafeReplicaSizeMetaDataPool"`
+	IsRequireSafeReplicaSizeDataPools    bool `yaml:"isRequireSafeReplicaSizeDataPools" json:"isRequireSafeReplicaSizeDataPools"`
 }
 
 type Postgres struct {
