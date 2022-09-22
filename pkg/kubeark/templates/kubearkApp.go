@@ -357,7 +357,6 @@ metadata:
     nginx.ingress.kubernetes.io/configuration-snippet: "
       keepalive_timeout 60s;
       send_timeout 60s;"
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
 spec:
   tls:
     - hosts:
@@ -371,7 +370,7 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: kubeark-web-app-service
+              name: kubeark-web-frontend-service
               port:
                 number: 80
 `)))
