@@ -18,22 +18,27 @@ package create
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/kubesphere/kubekey/cmd/ctl/options"
 	"github.com/kubesphere/kubekey/cmd/ctl/util"
 	"github.com/kubesphere/kubekey/pkg/common"
 	"github.com/kubesphere/kubekey/pkg/pipelines"
 	"github.com/kubesphere/kubekey/pkg/version/kubernetes"
 	"github.com/kubesphere/kubekey/pkg/version/kubesphere"
+
+	// "github.com/kubesphere/kubekey/pkg/version/kubesphere"
+
 	"github.com/spf13/cobra"
-	"time"
 )
 
 type CreateClusterOptions struct {
 	CommonOptions *options.CommonOptions
 
-	ClusterCfgFile   string
-	Kubernetes       string
-	EnableKubeSphere bool
+	ClusterCfgFile string
+	Kubernetes     string
+	// EnableKubeSphere bool
+	EnableKubeark    bool
 	KubeSphere       string
 	LocalStorage     bool
 	SkipPullImages   bool
@@ -133,6 +138,7 @@ func (o *CreateClusterOptions) AddFlags(cmd *cobra.Command) {
 	cmd.Flags().StringVarP(&o.Kubernetes, "with-kubernetes", "", "", "Specify a supported version of kubernetes")
 	cmd.Flags().BoolVarP(&o.LocalStorage, "with-local-storage", "", false, "Deploy a local PV provisioner")
 	cmd.Flags().BoolVarP(&o.EnableKubeSphere, "with-kubesphere", "", false, fmt.Sprintf("Deploy a specific version of kubesphere (default %s)", kubesphere.Latest().Version))
+	cmd.Flags().BoolVarP(&o.EnableKubeark, "with-kubeark", "", false, fmt.Sprintf("Deploy a specific version of kubeark (default %s)", kubesphere.Latest().Version))
 	cmd.Flags().BoolVarP(&o.SkipPullImages, "skip-pull-images", "", false, "Skip pre pull images")
 	cmd.Flags().BoolVarP(&o.SkipPushImages, "skip-push-images", "", false, "Skip pre push images")
 	cmd.Flags().StringVarP(&o.ContainerManager, "container-manager", "", "docker", "Container runtime: docker, crio, containerd and isula.")
