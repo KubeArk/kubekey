@@ -46,6 +46,13 @@ import (
 	"github.com/kubesphere/kubekey/v3/cmd/kk/pkg/plugins/dns"
 	"github.com/kubesphere/kubekey/v3/cmd/kk/pkg/plugins/network"
 	"github.com/kubesphere/kubekey/v3/cmd/kk/pkg/plugins/storage"
+	"github.com/kubesphere/kubekey/pkg/kubeark"
+	"github.com/kubesphere/kubekey/pkg/postgres"
+	"github.com/kubesphere/kubekey/pkg/rook"
+
+	kubekeycontroller "github.com/kubesphere/kubekey/controllers/kubekey"
+	"github.com/kubesphere/kubekey/pkg/hooks"
+
 )
 
 func NewCreateClusterPipeline(runtime *common.KubeRuntime) error {
